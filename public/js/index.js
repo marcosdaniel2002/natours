@@ -1,5 +1,5 @@
 import '@babel/polyfill';
-import { login } from './login';
+import { login, logout } from './login';
 import { displayMap } from './mapbox';
 
 console.log('Hello from parcelllllssssl');
@@ -25,4 +25,10 @@ if (loginForm) {
     const password = document.getElementById('password').value;
     login({ email, password });
   });
+}
+
+const logOutBtn = document.querySelector('.nav__el--logout');
+
+if (logOutBtn) {
+  logOutBtn.addEventListener('click', logout);
 }

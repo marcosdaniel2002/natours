@@ -24,33 +24,57 @@ function handleJWTExpiredError() {
   return new AppError('Token already expired. Please log in again', 401);
 }
 
-const sendErrorDev = (err, res) => {
-  res.status(err.statusCode).json({
-    status: err.status,
-    error: err,
-    message: err.message,
-    stack: err.stack,
+const sendErrorDev = (err, req, res) => {
+  // API
+  if (req.originalUrl.startsWith('/api')) {
+    return res.status(err.statusCode).json({
+      status: err.status,
+      error: err,
+      message: err.message,
+      stack: err.stack,
+    });
+  }
+  // RENDERED WEBSITE
+  return res.status(err.statusCode).render('error', {
+    title: 'Something went wrong!',
+    msg: err.message,
   });
 };
 
-const sendErrorProd = (err, res) => {
-  // OPERATIONAL TRUSTED ERROR: SEND MESSAGE TO THE CLIENT
-  if (err.isOperational) {
-    res.status(err.statusCode).json({
-      status: err.status,
-      message: err.message,
-    });
-
+const sendErrorProd = (err, req, res) => {
+  if (req.originalUrl.startsWith('/api')) {
+    // OPERATIONAL TRUSTED ERROR: SEND MESSAGE TO THE CLIENT
+    if (err.isOperational) {
+      return res.status(err.statusCode).json({
+        status: err.status,
+        message: err.message,
+      });
+    }
     // PROGRAMING OR OTHER UNKNOWN ERROR: DON'T LEAK ERROR DETAILS
-  } else {
     // 1) LOG ERROR
     console.error('ERROR!!!!', err);
 
-    res.status(500).json({
+    return res.status(500).json({
       status: 'error',
       message: 'Something went very wrong!',
     });
   }
+
+  // RENDERED WEBSITE
+  if (err.isOperational) {
+    return res.status(err.statusCode).render('error', {
+      title: 'Something went wrong!',
+      msg: err.message,
+    });
+  }
+  // PROGRAMING OR OTHER UNKNOWN ERROR: DON'T LEAK ERROR DETAILS
+  // 1) LOG ERROR
+  console.error('ERROR!!!!', err);
+
+  return res.status(err.statusCode).render('error', {
+    title: 'Something went wrong!',
+    msg: 'Please try again later.',
+  });
 };
 
 function globalErrorHandler(err, req, res, next) {
@@ -58,9 +82,10 @@ function globalErrorHandler(err, req, res, next) {
   err.status = err.status || 'errorr';
 
   if (process.env.NODE_ENV === 'development') {
-    sendErrorDev(err, res);
+    sendErrorDev(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
     let error = { ...err };
+    error.message = err.message;
 
     if (err.name === 'CastError') error = handleCastErrorDB(error);
     if (err.code === 11000) error = handleDuplicateFieldsDB(error);
@@ -68,7 +93,7 @@ function globalErrorHandler(err, req, res, next) {
     if (err.name === 'JsonWebTokenError') error = handleJWTError();
     if (err.name === 'TokenExpiredError') error = handleJWTExpiredError();
 
-    sendErrorProd(error, res);
+    sendErrorProd(error, req, res);
   }
 }
 
