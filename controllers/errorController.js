@@ -35,6 +35,7 @@ const sendErrorDev = (err, req, res) => {
     });
   }
   // RENDERED WEBSITE
+  
   return res.status(err.statusCode).render('error', {
     title: 'Something went wrong!',
     msg: err.message,

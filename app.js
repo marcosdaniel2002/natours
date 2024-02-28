@@ -26,6 +26,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // body parser, reading data from the body
 app.use(cookieParser());
+app.use(express.urlencoded({extended: true, limit: '10kb'}));
 app.use(
   express.json({
     limit: '10kb',
@@ -85,7 +86,6 @@ app.use(
 // test midleware xd
 app.use(function (req, res, next) {
   req.requestTime = new Date().toISOString();
-  console.log(req.cookies);
   next();
 });
 

@@ -19,6 +19,10 @@ export const login = async function (credentials) {
         location.assign('/');
       }, 1500);
     }
+
+    if(data.status !== 'success') {
+      throw new Error(data.message);
+    }
   } catch (e) {
     showAlert('error', e.message);
   }
