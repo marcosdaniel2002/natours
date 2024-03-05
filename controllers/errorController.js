@@ -35,7 +35,7 @@ const sendErrorDev = (err, req, res) => {
     });
   }
   // RENDERED WEBSITE
-  
+
   return res.status(err.statusCode).render('error', {
     title: 'Something went wrong!',
     msg: err.message,
@@ -79,12 +79,15 @@ const sendErrorProd = (err, req, res) => {
 };
 
 function globalErrorHandler(err, req, res, next) {
+  console.log('GLOBAL ERROR HANDLER');
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'errorr';
 
   if (process.env.NODE_ENV === 'development') {
+    console.log('develop error');
     sendErrorDev(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
+    console.log('production error');
     let error = { ...err };
     error.message = err.message;
 
