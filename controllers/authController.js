@@ -43,7 +43,6 @@ const signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create(filterBody);
 
   const url = `${req.protocol}://${req.get('host')}/me`;
-  console.log(url);
   await new Email(newUser, url).sendWelcome();
 
   createSendToken(newUser, 201, res);
@@ -62,7 +61,6 @@ const login = catchAsync(async (req, res, next) => {
   const correct = await user?.correctPassword(password, user.password);
 
   if (!correct) {
-    console.log('incorrect password!');
     return next(new AppError('Incorrect email or password', 401));
   }
 
@@ -82,7 +80,6 @@ const logout = (req, res) => {
 
 // Only for rendered pages, no errors!
 const isLoggedIn = async (req, res, next) => {
-  console.log('hasta aqui todo bien');
   const { jwt: jwtoken } = req.cookies;
   if (jwtoken) {
     try {

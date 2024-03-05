@@ -4,8 +4,6 @@ import { displayMap } from './mapbox';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
 
-console.log('hello from parcel');
-
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
 const logOutBtn = document.querySelector('.nav__el--logout');
@@ -42,7 +40,6 @@ if (userDataForm) {
     form.append('name', name);
     form.append('email', email);
     form.append('photo', photo);
-    console.log(form);
     updateSettings(form, 'data');
   });
 }

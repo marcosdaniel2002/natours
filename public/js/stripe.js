@@ -8,7 +8,6 @@ export const bookTour = async function (tourId) {
     // 1) Get checkout session from endpoint
     const res = await fetch(`http://127.0.0.1:3000/api/v1/bookings/checkout-session/${tourId}`);
     const data = await res.json();
-    console.log(data);
 
     // 2) Create checkout form + charge credit card
     await stripe.redirectToCheckout({

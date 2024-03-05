@@ -84,10 +84,8 @@ function globalErrorHandler(err, req, res, next) {
   err.status = err.status || 'errorr';
 
   if (process.env.NODE_ENV === 'development') {
-    console.log('develop error');
     sendErrorDev(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
-    console.log('production error');
     let error = { ...err };
     error.message = err.message;
 

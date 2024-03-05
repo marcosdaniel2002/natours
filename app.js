@@ -8,6 +8,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const AppError = require('./utils/appError');
 
@@ -83,6 +84,9 @@ app.use(
     ],
   })
 );
+
+// compress text on the response
+app.use(compression());
 
 // test midleware xd
 app.use(function (req, res, next) {
