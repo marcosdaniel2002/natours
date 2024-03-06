@@ -38,7 +38,8 @@ app.use(
 );
 
 // fix headers problems
-app.use(cors({ credentials: true }));
+app.use(cors());
+app.options('*', cors());
 // app.use(cors({ credentials: true }));
 // app.use(cors({ origin: true }));
 // app.use(cors());
