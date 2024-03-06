@@ -79,9 +79,8 @@ const sendErrorProd = (err, req, res) => {
 };
 
 function globalErrorHandler(err, req, res, next) {
-  console.log('GLOBAL ERROR HANDLER');
   err.statusCode = err.statusCode || 500;
-  err.status = err.status || 'errorr';
+  err.status = err.status || 'error';
 
   if (process.env.NODE_ENV === 'development') {
     sendErrorDev(err, req, res);

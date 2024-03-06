@@ -15,6 +15,13 @@ process.on('unhandledRejection', (err) => {
   });
 });
 
+process.on('SIGTERM', () => {
+  console.log('SIGTERM RECEIVERD. Shutting down gracefuly.');
+  server.close(() => {
+    console.log('Process terminated! 💥');
+  });
+});
+
 dotenv.config({ path: './config.env' });
 
 const app = require('./app');
