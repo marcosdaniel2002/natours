@@ -77,4 +77,21 @@ const getMyTours = catchAsync(async (req, res, next) => {
   });
 });
 
-module.exports = { getOverview, getTour, getLoginForm, getAccount, updateUserData, getMyTours };
+const alerts = (req, res, next) => {
+  const { alert } = req.query;
+  if (alert === 'booking') {
+    res.locals.alert =
+      "Your booking was successfully. Please check your email for a confirmation. If your booking doesn't show up here inmediatly, please come back later. ";
+  }
+  next();
+};
+
+module.exports = {
+  getOverview,
+  getTour,
+  getLoginForm,
+  getAccount,
+  updateUserData,
+  getMyTours,
+  alerts,
+};
